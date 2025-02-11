@@ -3,7 +3,6 @@ import random
 import pandas as pd
 from tabulate import tabulate
 
-# Listas fixas de dias e horários
 dias_semana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
 horarios = ["Aula 1", "Aula 2", "Aula 3", "Aula 4"]
 
@@ -28,47 +27,37 @@ def coletar_entradas():
 # Solução Determinística (Guloso)
 # ========================
 def criar_horario_alg_guloso(semestres):
-    # Cria a tabela de horários para cada semestre (usando DataFrame)
     horario_semestres = {semestre: pd.DataFrame("", index=horarios, columns=dias_semana)
                          for semestre in semestres.keys()}
     
-    # Cria o calendário dos professores (para controlar disponibilidade)
     calendario_professores = {
         professor: {dia: [False]*4 for dia in dias_semana}
         for semestre in semestres.values() for disciplina, aulas, professor in semestre
     }
     
-    # Cria um contador para cada disciplina por dia (cada bloco equivale a 2 aulas)
     contador_disciplinas = {semestre: {dia: {} for dia in dias_semana}
                             for semestre in semestres.keys()}
     
     total_aulas = 0
     total_aulas_alocadas = 0
     
-    # Para cada semestre, percorre suas disciplinas e aloca blocos de aulas
     for semestre in semestres:
         for disciplina, aulas, professor in semestres[semestre]:
             total_aulas += aulas
             alocadas = 0
-            # Percorre os dias na ordem definida
             for dia in dias_semana:
                 if alocadas >= aulas:
                     break
                 col = dias_semana.index(dia)
-                # Trabalha em blocos: [0,1] e [2,3]
                 for block_index in [0, 2]:
                     if alocadas >= aulas:
                         break
-                    # Verifica se já foram alocados 2 blocos para essa disciplina no dia
                     if contador_disciplinas[semestre][dia].get(disciplina, 0) >= 2:
                         continue
-                    # Verifica se os dois horários do bloco estão livres na sala
                     if (horario_semestres[semestre].iloc[block_index, col] == "" and
                         horario_semestres[semestre].iloc[block_index+1, col] == ""):
-                        # Verifica se o professor está disponível nesses horários
                         if (not calendario_professores[professor][dia][block_index] and
                             not calendario_professores[professor][dia][block_index+1]):
-                            # Aloca o bloco
                             horario_semestres[semestre].iloc[block_index, col] = f"{disciplina}\n{professor}"
                             horario_semestres[semestre].iloc[block_index+1, col] = f"{disciplina}\n{professor}"
                             alocadas += 2
@@ -83,10 +72,7 @@ def criar_horario_alg_guloso(semestres):
 # Funções de Avaliação da Solução
 # ========================
 def compute_allocations(horario_semestres, semestres):
-    """
-    Para cada disciplina de cada semestre, calcula quantos blocos (cada bloco = 2 aulas)
-    foram alocados.
-    """
+    
     allocations = {}
     for semestre, disciplinas in semestres.items():
         allocations[semestre] = {}
@@ -103,9 +89,7 @@ def compute_allocations(horario_semestres, semestres):
     return allocations
 
 def compute_cost(allocations, semestres):
-    """
-    O custo é a soma, para cada disciplina, dos blocos (2 aulas) faltantes para atingir o total requerido.
-    """
+    
     cost = 0
     for semestre, disciplinas in semestres.items():
         for disc, required, prof in disciplinas:

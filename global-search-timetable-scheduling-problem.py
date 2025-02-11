@@ -3,7 +3,6 @@ import random
 import pandas as pd
 from tabulate import tabulate
 
-# Listas fixas de dias e horários
 dias_semana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
 horarios = ["Aula 1", "Aula 2", "Aula 3", "Aula 4"]
 
@@ -11,7 +10,6 @@ horarios = ["Aula 1", "Aula 2", "Aula 3", "Aula 4"]
 # Função para coletar entradas
 # ========================
 def coletar_entradas():
-    # Agora usamos "semestres" em vez de "turmas"
     semestres = {}
     num_semestres = int(input("Quantos semestres deseja adicionar? "))
     for _ in range(num_semestres):
@@ -26,16 +24,13 @@ def coletar_entradas():
     return semestres
 
 # ========================
-# Solução Determinística (Guloso)
+# Algoritmo Guloso
 # ========================
 def criar_horario_alg_guloso(semestres):
-    # Inicializa a tabela de horários (DataFrame) para cada semestre
     horario_semestres = {semestre: pd.DataFrame("", index=horarios, columns=dias_semana) for semestre in semestres.keys()}
-    # Inicializa o calendário dos professores
     calendario_professores = {professor: {dia: [False]*4 for dia in dias_semana}
                               for semestre in semestres.values()
                               for disciplina, aulas, professor in semestre}
-    # Inicializa o contador de blocos (cada bloco = 2 aulas) por dia para cada semestre
     contador_disciplinas = {semestre: {dia: {} for dia in dias_semana} for semestre in semestres.keys()}
     
     total_aulas = 0
@@ -45,7 +40,6 @@ def criar_horario_alg_guloso(semestres):
         for disciplina, aulas, professor in semestres[semestre]:
             total_aulas += aulas
             alocadas = 0
-            # Itera pelos dias e blocos de forma fixa
             for dia in dias_semana:
                 if alocadas >= aulas:
                     break
@@ -71,17 +65,8 @@ def criar_horario_alg_guloso(semestres):
 # ========================
 # Fase de Construção GRASP (Randomizada)
 # ========================
-def criar_horario_grasp(semestres, alpha=0.3):
-    """
-    Cria uma solução usando um procedimento guloso randomizado.
-    Para cada disciplina, são coletados os possíveis blocos (dia, bloco) que satisfaçam:
-      - O semestre tem os dois horários livres;
-      - O professor está disponível;
-      - Não ultrapassa 2 blocos por dia para a disciplina.
-    Dentre esses candidatos, é formada uma RCL (Restricted Candidate List) e um dos
-    elementos é escolhido aleatoriamente.
-    """
-    # Inicializa estruturas
+def criar_horario_grasp(semestres, alpha=0.4):
+
     horario_semestres = {semestre: pd.DataFrame("", index=horarios, columns=dias_semana) for semestre in semestres.keys()}
     calendario_professores = {professor: {dia: [False]*4 for dia in dias_semana}
                               for semestre in semestres.values()
@@ -137,10 +122,6 @@ def criar_horario_grasp(semestres, alpha=0.3):
 # Funções de avaliação da solução
 # ========================
 def compute_allocations(horario_semestres, semestres):
-    """
-    Para cada disciplina de cada semestre, calcula quantos blocos (cada bloco = 2 aulas)
-    foram alocados.
-    """
     allocations = {}
     for semestre, disciplinas in semestres.items():
         allocations[semestre] = {}
@@ -157,9 +138,6 @@ def compute_allocations(horario_semestres, semestres):
     return allocations
 
 def compute_cost(allocations, semestres):
-    """
-    O custo é definido como a soma, para cada disciplina, do número de blocos que faltam alocar.
-    """
     cost = 0
     for semestre, disciplinas in semestres.items():
         for disc, required, prof in disciplinas:
@@ -170,7 +148,7 @@ def compute_cost(allocations, semestres):
     return cost
 
 # ========================
-# Busca Local Determinística (first improvement)
+# Busca Local Determinística (Movimentos de Realocação e Inserção)
 # ========================
 def try_relocation_moves(solution, semestres, current_cost):
     # Desempacota a solução (são 5 itens)
@@ -274,12 +252,7 @@ def local_search_deterministic(solution, semestres, max_iter=1000):
 # Procedimento GRASP
 # ========================
 def grasp(semestres, num_iter=50, alpha=0.3):
-    """
-    Procedimento GRASP:
-      - Em cada iteração, constrói uma solução usando a fase de construção randomizada;
-      - Aplica a busca local para aprimorar a solução;
-      - Atualiza a melhor solução encontrada.
-    """
+    
     best_solution = None
     best_cost = float('inf')
     for i in range(num_iter):
