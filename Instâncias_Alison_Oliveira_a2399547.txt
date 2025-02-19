@@ -1,0 +1,196 @@
+Instâncias Alison Oliveira 
+
+6
+CC2
+6
+Circuitos Digitais
+4
+Alecsandro Souza
+M. Discreta
+4
+João Silva
+Estruturas de Dados I
+4
+Fabiano Santos
+Álgebra Linear
+4
+Carlos Alberto Torres
+Prob. e Estatística
+4
+Alex Raphael
+Cálculo II
+4
+Fernanda Soares
+CC4
+5
+Programação OO
+4
+Daniel Freitas
+Banco de Dados I
+4
+Willian Lucas
+Arq. de Computadores II
+4
+Gabriele Buchert
+Programação p/Web
+4
+Cássio Fernandes
+Proj. e Análise de Algoritmos
+4
+Fabiano Santos
+CC6
+6
+Compiladores
+4
+João Silva
+Redes de Computadores
+4
+Gabriele Buchert
+Sist. de Tempo Real
+4
+Elias Figueroa
+Engenharia de Software II
+4
+Eder Pinheiro
+Met. de Pesq. Científica
+4
+Cristian Melo
+Proc. de Linguagem Natural
+4
+Fabiano Santos
+CC8
+2
+Tec. em Contexto Social
+4
+Mara Drebes
+Sistemas de Informação
+4
+Cristian Melo
+ES2
+8
+Prob. e Estatística
+4
+Rodrigo Ruas
+Teste e Depuração de Código
+2
+Daniel Freitas
+Resolução de Problemas II
+2
+Daniel Freitas
+Resolução de Problemas II
+2
+Paulo Ribeiro
+Resolução de Problemas II
+4
+Eder Pinheiro
+Programação OO
+4
+Cássio Fernandes
+Tipos Abstratos de Dados
+4
+Ronaldo Fetter
+Teoria dos Grafos
+2
+Paulo Ribeiro
+ES4
+7
+Análise de Software
+2
+Mara Drebes
+Intro. a Análise de Alg.
+2
+Cássio Fernandes
+Intro. a Sistemas de Comp.
+4
+Emerson Neves
+Res. de Problemas IV
+2
+Mara Drebes
+Res. de Problemas IV
+6
+Jean Gonçalves
+Práticas em BD
+4
+Willian Lucas
+Ver. e Val de Software
+4
+Jean Gonçalves
+
+
+
+///////////////////////////////////////////////////////////////////////
+4
+CC1
+6
+Alg e Programação
+4
+Cláudio
+Cálculo I
+4
+Marcos
+Geo Analítica
+4
+Luiz
+Lógica Mat
+4
+Simão
+Intro. a Ciência e Tec.
+4
+Julia
+Eletrotécnica
+4
+Ronaldo
+CC3
+5
+Comunicação de Dados
+4
+Cláudio
+Arq e Org de Comp I
+4
+Marcos
+Org de Arq e Dados
+4
+Luiz
+Estr de Dados II
+4
+Simão
+Acess e Inclusão Dig
+4
+Julia
+CC5
+6
+Sistemas Operacionais
+4
+Cláudio
+Linguagens Formais
+4
+Marcos
+Eng de Software I
+4
+Luiz
+Proj. de Lin de Progr.
+4
+Simão
+Int Artificial
+4
+Julia
+Desafios de Prog
+4
+Ronaldo
+CC7
+5
+BD II
+4
+Cláudio
+Sistemas Distribuídos
+4
+Marcos
+Intro. ao Proces de Img Dig
+4
+Luiz
+Compiladores
+4
+Simão
+Adm e Empre
+4
+Julia
