@@ -6,9 +6,6 @@ from tabulate import tabulate
 dias_semana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
 horarios = ["Aula 1", "Aula 2", "Aula 3", "Aula 4"]
 
-# ========================
-# Função para coletar entradas
-# ========================
 def coletar_entradas():
     semestres = {}
     num_semestres = int(input("Quantos semestres deseja adicionar? "))
@@ -23,9 +20,7 @@ def coletar_entradas():
             semestres[semestre_nome].append((disciplina, aulas, professor))
     return semestres
 
-# ========================
-# Algoritmo Guloso
-# ========================
+
 def criar_horario_alg_guloso(semestres):
     horario_semestres = {semestre: pd.DataFrame("", index=horarios, columns=dias_semana) for semestre in semestres.keys()}
     calendario_professores = {professor: {dia: [False]*4 for dia in dias_semana}
@@ -62,9 +57,7 @@ def criar_horario_alg_guloso(semestres):
                             contador_disciplinas[semestre][dia][disciplina] = contador_disciplinas[semestre][dia].get(disciplina, 0) + 2
     return horario_semestres, total_aulas, total_aulas_alocadas, calendario_professores, contador_disciplinas
 
-# ========================
-# Fase de Construção GRASP (Randomizada)
-# ========================
+
 def criar_horario_grasp(semestres, alpha=0.4):
 
     horario_semestres = {semestre: pd.DataFrame("", index=horarios, columns=dias_semana) for semestre in semestres.keys()}
@@ -76,17 +69,13 @@ def criar_horario_grasp(semestres, alpha=0.4):
     total_aulas = 0
     total_aulas_alocadas = 0
     
-    # Para cada semestre e cada disciplina, tenta alocar os blocos necessários.
     for semestre in semestres:
         for disciplina, aulas, professor in semestres[semestre]:
             total_aulas += aulas
             alocadas = 0
-            # Enquanto não alocou todas as aulas requeridas:
             while alocadas < aulas:
                 candidate_slots = []
-                # Percorre todos os dias e blocos para encontrar candidatos
                 for dia in dias_semana:
-                    # Se já foram alocados 2 blocos para essa disciplina no dia, ignora.
                     if contador_disciplinas[semestre][dia].get(disciplina, 0) >= 2:
                         continue
                     col = dias_semana.index(dia)
@@ -96,7 +85,6 @@ def criar_horario_grasp(semestres, alpha=0.4):
                             if (not calendario_professores[professor][dia][block_index] and 
                                 not calendario_professores[professor][dia][block_index+1]):
                                 candidate_slots.append((dia, block_index))
-                # Se houver candidatos, forma a RCL e escolhe um aleatoriamente.
                 if candidate_slots:
                     candidate_slots.sort(key=lambda x: dias_semana.index(x[0]))
                     best_cost = dias_semana.index(candidate_slots[0][0])
@@ -114,13 +102,10 @@ def criar_horario_grasp(semestres, alpha=0.4):
                     calendario_professores[professor][chosen_day][chosen_block+1] = True
                     contador_disciplinas[semestre][chosen_day][disciplina] = contador_disciplinas[semestre][chosen_day].get(disciplina, 0) + 2
                 else:
-                    # Se não há candidatos disponíveis, encerra o loop para essa disciplina.
                     break
     return horario_semestres, total_aulas, total_aulas_alocadas, calendario_professores, contador_disciplinas
 
-# ========================
-# Funções de avaliação da solução
-# ========================
+
 def compute_allocations(horario_semestres, semestres):
     allocations = {}
     for semestre, disciplinas in semestres.items():
@@ -147,11 +132,8 @@ def compute_cost(allocations, semestres):
                 cost += needed
     return cost
 
-# ========================
-# Busca Local Determinística (Movimentos de Realocação e Inserção)
-# ========================
+
 def try_relocation_moves(solution, semestres, current_cost):
-    # Desempacota a solução (são 5 itens)
     horario_semestres, total_aulas, total_aulas_alocadas, calendario_professores, contador_disciplinas = solution
     for semestre in sorted(horario_semestres.keys()):
         for day_from in dias_semana:
@@ -248,9 +230,7 @@ def local_search_deterministic(solution, semestres, max_iter=1000):
         iter_count += 1
     return current_solution
 
-# ========================
-# Procedimento GRASP
-# ========================
+
 def grasp(semestres, num_iter=50, alpha=0.3):
     
     best_solution = None
@@ -266,14 +246,11 @@ def grasp(semestres, num_iter=50, alpha=0.3):
             best_cost = cost
     return best_solution, best_cost
 
-# ========================
-# Execução Principal
-# ========================
+
 if __name__ == "__main__":
     print("=== Coleta de Instâncias ===")
     semestres = coletar_entradas()
     
-    # Solução Determinística (Guloso)
     sol_guloso = criar_horario_alg_guloso(semestres)
     allocations_guloso = compute_allocations(sol_guloso[0], semestres)
     cost_guloso = compute_cost(allocations_guloso, semestres)
@@ -286,7 +263,6 @@ if __name__ == "__main__":
     print(f"Total de aulas solicitadas: {sol_guloso[1]}")
     print(f"Total de aulas alocadas: {sol_guloso[2]}")
     
-    # Aplicando GRASP
     print("\n=== Executando GRASP ===")
     best_solution, best_cost = grasp(semestres, num_iter=100, alpha=0.3)
     horarios_final, total_aulas_final, total_aulas_alocadas_final, _, _ = best_solution
